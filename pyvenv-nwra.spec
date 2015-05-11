@@ -2,7 +2,7 @@
 
 Name:		pyvenv-%{envname}
 Version:	1.0
-Release:	3%{?dist}
+Release:	5%{?dist}
 Summary:	NWRA python environment
 License:	GPLv3+
 
@@ -33,7 +33,10 @@ find %{buildroot} -type f -exec sed -i -e 's|%{buildroot}||g' '{}' +
 # Needs to be in /etc to override EL python macros
 mkdir -p %{buildroot}/etc/rpm
 cat > %{buildroot}/etc/rpm/macros.zz-nwra-pyvenv << 'EOF'
-%%_prefix /opt/pyvenv/%{envname}-%{version}
+# Maybe set _exec_prefix which also sets _libexecdir, _sbindir
+# Setting _prefix breaks ipython build which links in files from _jsdir and _datadir
+%%_bindir /opt/pyvenv/%{envname}-%{version}/bin
+%%_mandir /opt/pyvenv/%{envname}-%{version}/share/man
 %%__python /opt/pyvenv/%{envname}-%{version}/bin/python
 %%__python2 /opt/pyvenv/%{envname}-%{version}/bin/python2
 %%pyvenv_name_prefix pyvenv-%{envname}-
@@ -59,6 +62,12 @@ EOF
 
 
 %changelog
+* Mon May 11 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0-5
+- Set %%_mandir
+
+* Mon May 11 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0-4
+- Set %%_bindir instead of %%_prefix
+
 * Mon May 11 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0-3
 - Add %%_prefix, %%__python to rpm macros
 
