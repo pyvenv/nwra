@@ -2,7 +2,7 @@
 
 Name:		pyvenv-%{envname}
 Version:	1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	NWRA python environment
 License:	GPLv3+
 
@@ -33,6 +33,8 @@ find %{buildroot} -type f -exec sed -i -e 's|%{buildroot}||g' '{}' +
 # Needs to be in /etc to override EL python macros
 mkdir -p %{buildroot}/etc/rpm
 cat > %{buildroot}/etc/rpm/macros.zz-nwra-pyvenv << 'EOF'
+%%_prefix /opt/pyvenv/%{envname}-%{version}
+%%__python /opt/pyvenv/%{envname}-%{version}/bin/python
 %%__python2 /opt/pyvenv/%{envname}-%{version}/bin/python2
 %%pyvenv_name_prefix pyvenv-%{envname}-
 EOF
@@ -57,6 +59,9 @@ EOF
 
 
 %changelog
+* Mon May 11 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0-3
+- Add %%_prefix, %%__python to rpm macros
+
 * Fri May 8 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0-2
 - Drop base, add -devel package
 
